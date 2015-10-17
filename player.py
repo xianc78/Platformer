@@ -14,6 +14,8 @@ class Player:
 		
 	def update(self):
 		self.calc_grav()
+		
+		# Move the character horizontally and check for collisions.
 		self.rect.x += self.change_x
 		for platform in self.level.platform_list:
 			if self.rect.colliderect(platform.rect):
@@ -21,6 +23,8 @@ class Player:
 						self.rect.right = platform.rect.left
 					else:
 						self.rect.left = platform.rect.right
+						
+		# Move the character vertically and check for collisions
 		self.rect.y += self.change_y
 		for platform in self.level.platform_list:
 			if self.rect.colliderect(platform.rect):
