@@ -1,19 +1,50 @@
 import pygame
-import constants
+import constants, spritesheet_functions
 
 class Player:
-	def __init__(self, x, y, level):
-		self.image = pygame.Surface([32, 32])
-		self.image.fill(constants.RED)
+	frames_l = []
+	frames_r = []
+	def __init__(self, x, y, facing, level):
+		# Create the image
+		self.spritesheet = spritesheet_functions.SpriteSheet("resources/graphics/player.bmp", constants.WHITE)
+		
+		image = self.spritesheet.grab_image(0, 16, 16, 16)
+		image = pygame.transform.scale2x(image)
+		self.frames_l.append(image)
+		
+		image = self.spritesheet.grab_image(48, 16, 16, 16)
+		image = pygame.transform.scale2x(image)
+		self.frames_l.append(image)
+		
+		image = self.spritesheet.grab_image(112, 16, 16, 16)
+		image = pygame.transform.scale2x(image)
+		self.frames_r.append(image)
+		
+		image = self.spritesheet.grab_image(64, 16, 16, 16)
+		image = pygame.transform.scale2x(image)
+		self.frames_r.append(image)
+		
+		self.index = 0
+		self.MAX_FRAMES = 12
+		self.facing = facing
+		self.animate()
+		
+		# Set the coordinates
 		self.rect = self.image.get_rect()
 		self.rect.x = x
 		self.rect.y = y
+		
+		# Set the speed to 0
 		self.change_x = 0
 		self.change_y = 0
+		
+		# Set the level
 		self.level = level
 		
 	def update(self):
 		self.calc_grav()
+		if self.change_x != 0:
+			self.animate()
 		
 		# Move the character horizontally and check for collisions.
 		self.rect.x += self.change_x
@@ -47,7 +78,13 @@ class Player:
 			self.change_y = -10
 		
 	def animate(self):
-		pass
+		self.index += 1
+		if self.index >= self.MAX_FRAMES:
+			self.index = 0
+		if self.facing == "r":
+			self.image = self.frames_r[self.index//6]
+		else:
+			self.image = self.frames_l[self.index//6]
 	
 	def calc_grav(self):
 		if self.change_y == 0:

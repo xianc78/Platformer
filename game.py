@@ -46,8 +46,10 @@ class Game:
 						self.mode = "paused"
 			pressed = pygame.key.get_pressed()
 			if pressed[pygame.K_LEFT]:
+				self.player.facing = "l"
 				self.player.change_x = -5
 			elif pressed[pygame.K_RIGHT]:
+				self.player.facing = "r"
 				self.player.change_x = 5
 		elif self.mode == "paused":
 			for event in pygame.event.get():

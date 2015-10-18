@@ -37,7 +37,7 @@ class Map():
 				elif tile == "#":
 					self.platform_list.append(Platform(x, y, self))
 				elif tile == "@":
-					self.player = Player(x, y, self)
+					self.player = Player(x, y, "r", self)
 				else:
 					easygui.msgbox(tile + " is not a valid tile", constants.TITLE)
 					pygame.quit()
@@ -45,3 +45,6 @@ class Map():
 				x += constants.TILE_WIDTH
 			y += constants.TILE_HEIGHT
 			x = 0
+			
+	def reset(self):
+		self.__init__(self.file)
