@@ -3,6 +3,9 @@ import constants
 from player import Player
 from platform import Platform
 from map import Map
+from textfunctions import *
+
+titleText = centerText(constants.TITLE)
 
 class Game:
 	def __init__(self, mode):
@@ -20,8 +23,9 @@ class Game:
 		
 	
 	def update_screen(self):
+		# Display images
 		if self.mode == "menu":
-			pass
+			self.screen.blit(titleText.text, titleText.rect)
 		elif self.mode == "game":
 			self.screen.fill(constants.BLACK)
 			self.screen.blit(self.player.image, (self.player.rect.x, self.player.rect.y))
@@ -32,7 +36,17 @@ class Game:
 		pygame.display.update()
 		
 	def check_events(self):
-		if self.mode == "game":
+		# Check for in game events
+		if self.mode == "menu":
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					if easygui.ynbox("Quit?"):
+						self.terminate()
+					else:
+						pass
+				elif event.type == pygame.KEYDOWN:
+					self.mode = "game"
+		elif self.mode == "game":
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					if easygui.ynbox("Quit?"):
@@ -47,10 +61,10 @@ class Game:
 			pressed = pygame.key.get_pressed()
 			if pressed[pygame.K_LEFT]:
 				self.player.facing = "l"
-				self.player.change_x = -5
+				self.player.change_x = -4
 			elif pressed[pygame.K_RIGHT]:
 				self.player.facing = "r"
-				self.player.change_x = 5
+				self.player.change_x = 4
 		elif self.mode == "paused":
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -63,6 +77,7 @@ class Game:
 						self.mode = "game"
 	
 	def run_logic(self):
+		# Run the game
 		if self.mode == "game":
 			self.player.update()
 			self.player.change_x = 0
