@@ -40,6 +40,7 @@ class Player:
 		
 		# Set the level
 		self.level = level
+		self.game = self.level.game
 		
 	def update(self):
 		self.calc_grav()
@@ -54,6 +55,14 @@ class Player:
 						self.rect.right = platform.rect.left
 					else:
 						self.rect.left = platform.rect.right
+		if self.rect.right > self.level.limit:
+			self.game.levelno += 1
+		elif self.rect.left < 0:
+			self.rect.left = 0
+			try:
+				self.game.set_map(self.game.level_list[self.game.levelno])
+			except IndexError:
+				self.game.terminate()
 						
 		# Move the character vertically and check for collisions
 		self.rect.y += self.change_y

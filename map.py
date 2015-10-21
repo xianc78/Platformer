@@ -8,8 +8,9 @@ confg = ConfigParser.RawConfigParser()
 class Map():
 	platform_list = []
 	enemy_list = []
-	def __init__(self, file):
+	def __init__(self, file, game):
 		self.file = file
+		self.game = game
 		try:
 			confg.read(self.file)
 		except FileError:
@@ -19,6 +20,20 @@ class Map():
 		self.create_level()
 		
 	def create_level(self):
+		try:
+			self.limit = int(confg.get("meta", "limit")) * constants.TILE_WIDTH
+		except ConfigParser.NoSectionError:
+			easygui.msgbox("meta section does not exist in " + self.file + ".")
+			pygame.quit()
+			sys.exit()
+		except ConfigParser.NoOptionError:
+			easygui.msgbox("limit option does not exist in " + self.file + ".")
+			pygame.quit()
+			sys.exit()
+		except ValueError:
+			easygui.msgbox("limit must be a whole number.")
+			pygame.quit()
+			sys.exit()
 		try:
 			self.layout = confg.get("map", "layout").split("\n")
 		except ConfigParser.NoSectionError:

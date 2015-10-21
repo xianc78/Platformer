@@ -6,16 +6,17 @@ from map import Map
 from textfunctions import *
 
 titleText = centerText(constants.TITLE)
+pausedText = centerText("Paused")
 
 class Game:
 	def __init__(self, mode):
 		self.screen = pygame.display.get_surface()
 		self.mode = mode
 		
-		level_list = glob.glob("resources/levels/level?.map")
-		levelno = 0
+		self.level_list = glob.glob("resources/levels/level?.map")
+		self.levelno = 0
 		#print len(level_list)
-		self.set_map(level_list[levelno])
+		self.set_map(self.level_list[self.levelno])
 		#self.set_map("resources/levels/level.map")
 		#self.player = Player(0, 0, self.map)
 		
@@ -32,7 +33,7 @@ class Game:
 			for platform in self.platform_list:
 				self.screen.blit(platform.image, (platform.rect.x, platform.rect.y))
 		elif self.mode == "paused":
-			pass
+			self.screen.blit(pausedText.text, pausedText.rect)
 		pygame.display.update()
 		
 	def check_events(self):
@@ -83,7 +84,7 @@ class Game:
 			self.player.change_x = 0
 	
 	def set_map(self, map):
-		self.map = Map(map)
+		self.map = Map(map, self)
 		self.platform_list = self.map.platform_list
 		try:
 			self.player = self.map.player
