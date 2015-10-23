@@ -9,3 +9,6 @@ class centerText:
 		self.text = fontObj.render(text, True, constants.WHITE)
 		self.rect = self.text.get_rect()
 		self.rect.center = (constants.SCREEN_WIDTH/2, constants.SCREEN_HEIGHT/2)
+		
+	def __str__(self):
+		return self.text

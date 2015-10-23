@@ -62,4 +62,4 @@ class Map():
 			x = 0
 			
 	def reset(self):
-		self.__init__(self.file)
+		self.__init__(self.file, self.game)

@@ -57,12 +57,12 @@ class Player:
 						self.rect.left = platform.rect.right
 		if self.rect.right > self.level.limit:
 			self.game.levelno += 1
-		elif self.rect.left < 0:
-			self.rect.left = 0
 			try:
 				self.game.set_map(self.game.level_list[self.game.levelno])
 			except IndexError:
 				self.game.terminate()
+		elif self.rect.left < 0:
+			self.rect.left = 0
 						
 		# Move the character vertically and check for collisions
 		self.rect.y += self.change_y
