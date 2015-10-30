@@ -55,6 +55,12 @@ class Player:
 						self.rect.right = platform.rect.left
 					else:
 						self.rect.left = platform.rect.right
+		for enemy in self.level.enemy_list:
+			if self.rect.colliderect(enemy.rect):
+				if self.change_x > 0:
+					self.rect.right = enemy.rect.left
+				else:
+					self.rect.left = enemy.rect.right
 		if self.rect.right > self.level.limit:
 			self.game.levelno += 1
 			try:
@@ -73,6 +79,12 @@ class Player:
 					else:
 						self.rect.top = platform.rect.bottom
 					self.change_y = 0
+		for enemy in self.level.enemy_list:
+			if self.rect.colliderect(enemy.rect):
+				if self.change_y > 0:
+					self.level.enemy_list.remove(enemy)
+				else:
+					self.rect.top = enemy.rect.bottom
 		if self.rect.bottom > constants.SCREEN_HEIGHT:
 			self.rect.bottom = constants.SCREEN_HEIGHT
 

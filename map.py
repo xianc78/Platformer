@@ -2,15 +2,18 @@ import pygame, sys, ConfigParser, easygui
 import constants
 from platform import Platform
 from player import Player
+from enemy import *
 
 confg = ConfigParser.RawConfigParser()
 
 class Map():
-	platform_list = []
-	enemy_list = []
+	platform_list = None
+	enemy_list = None
 	def __init__(self, file, game):
 		self.file = file
 		self.game = game
+		self.platform_list = []
+		self.enemy_list = []
 		try:
 			confg.read(self.file)
 		except FileError:
@@ -20,6 +23,7 @@ class Map():
 		self.create_level()
 		
 	def create_level(self):
+		# Load all the data from the file if it exists.
 		try:
 			self.limit = int(confg.get("meta", "limit")) * constants.TILE_WIDTH
 		except ConfigParser.NoSectionError:
@@ -44,6 +48,7 @@ class Map():
 			easygui.msgbox("layout option does not exist.", constants.TITLE)
 			pygame.quit()
 			sys.exit()
+			
 		x = y = 0
 		for row in self.layout:
 			for tile in row:
@@ -53,6 +58,8 @@ class Map():
 					self.platform_list.append(Platform(x, y, self))
 				elif tile == "@":
 					self.player = Player(x, y, "r", self)
+				elif tile == "e":
+					self.enemy_list.append(Enemy1(x, y, -4, self))
 				else:
 					easygui.msgbox(tile + " is not a valid tile", constants.TITLE)
 					pygame.quit()

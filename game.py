@@ -8,7 +8,6 @@ from camera import Camera
 
 titleText = centerText(constants.TITLE)
 pausedText = centerText("Paused")
-levelClearText = centerText("Level Cleared")
 
 class Game:
 	def __init__(self, mode):
@@ -33,6 +32,8 @@ class Game:
 		elif self.mode == "game":
 			self.screen.fill(constants.BLACK)
 			self.screen.blit(self.player.image, (self.player.rect.x - self.camera.rect.x, self.player.rect.y - self.camera.rect.y))
+			for enemy in self.enemy_list:
+				self.screen.blit(enemy.image, (enemy.rect.x - self.camera.rect.x, enemy.rect.y - self.camera.rect.y))
 			for platform in self.platform_list:
 				self.screen.blit(platform.image, (platform.rect.x - self.camera.rect.x, platform.rect.y - self.camera.rect.y))
 		elif self.mode == "paused":
@@ -84,13 +85,16 @@ class Game:
 		# Run the game
 		if self.mode == "game":
 			self.player.update()
-			if self.player.rect.right > constants.SCREEN_WIDTH - (constants.SCREEN_WIDTH/4):
+			if self.player.rect.right > self.camera.rect.right - (constants.SCREEN_WIDTH/4):
 				self.camera.move(self.player.change_x, 0)
 			self.player.change_x = 0
+			for enemy in self.enemy_list:
+				enemy.update()
 	
 	def set_map(self, map):
 		self.map = Map(map, self)
 		self.platform_list = self.map.platform_list
+		self.enemy_list = self.map.enemy_list
 		self.camera.set_pos(0, 0)
 		try:
 			self.player = self.map.player
