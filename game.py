@@ -5,9 +5,13 @@ from platform import Platform
 from map import Map
 from textfunctions import *
 from camera import Camera
+from button import Button
 
 titleText = centerText(constants.TITLE)
 pausedText = centerText("Paused")
+
+startButton = Button(constants.SCREEN_WIDTH/2, 304, "Start")
+exitButton = Button(constants.SCREEN_WIDTH/2, 368, "Exit")
 
 class Game:
 	def __init__(self, mode):
@@ -29,6 +33,8 @@ class Game:
 		# Display images
 		if self.mode == "menu":
 			self.screen.blit(titleText.text, titleText.rect)
+			self.screen.blit(startButton.image, startButton.rect)
+			self.screen.blit(exitButton.image, exitButton.rect)
 		elif self.mode == "game":
 			self.screen.fill(constants.BLACK)
 			self.screen.blit(self.player.image, (self.player.rect.x - self.camera.rect.x, self.player.rect.y - self.camera.rect.y))
@@ -51,6 +57,8 @@ class Game:
 						pass
 				elif event.type == pygame.KEYDOWN:
 					self.mode = "game"
+				elif event.type == pygame.MOUSEBUTTONDOWN:
+					self.mouse_click()
 		elif self.mode == "game":
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -101,6 +109,13 @@ class Game:
 		except AttributeError:
 			easygui.msgbox("The map doesn't have a player.")
 			self.terminate()
+			
+	def mouse_click(self):
+		if self.mode == "menu":
+			if startButton.rect.collidepoint(pygame.mouse.get_pos()):
+				self.mode = "game"
+			elif exitButton.rect.collidepoint(pygame.mouse.get_pos()):
+				self.terminate()
 			
 	def terminate(self):
 		pygame.quit()
