@@ -12,3 +12,9 @@ class centerText:
 		
 	def __str__(self):
 		return self.text
+		
+class scoreText:
+	def __init__(self, x, y):
+		pass
+	def update(self):
+		pass

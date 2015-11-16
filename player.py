@@ -38,7 +38,7 @@ class Player:
 		self.change_x = 0
 		self.change_y = 0
 		
-		# Set the level
+		# Set the level and game
 		self.level = level
 		self.game = self.level.game
 		
@@ -57,10 +57,13 @@ class Player:
 						self.rect.left = platform.rect.right
 		for enemy in self.level.enemy_list:
 			if self.rect.colliderect(enemy.rect):
+				self.die()
+			'''
 				if self.change_x > 0:
 					self.rect.right = enemy.rect.left
 				else:
 					self.rect.left = enemy.rect.right
+			'''
 		if self.rect.right > self.level.limit:
 			self.game.levelno += 1
 			try:
@@ -83,10 +86,12 @@ class Player:
 			if self.rect.colliderect(enemy.rect):
 				if self.change_y > 0:
 					self.level.enemy_list.remove(enemy)
+					self.game.score += 100
 				else:
 					self.rect.top = enemy.rect.bottom
-		if self.rect.bottom > constants.SCREEN_HEIGHT:
-			self.rect.bottom = constants.SCREEN_HEIGHT
+		if self.rect.top > constants.SCREEN_HEIGHT:
+			self.die()
+			#self.rect.bottom = constants.SCREEN_HEIGHT
 
 	def jump(self):
 		platform_hit_list = []
@@ -112,3 +117,8 @@ class Player:
 			self.change_y = 1
 		else:
 			self.change_y += constants.GRAVITY
+			
+	def die(self):
+		self.game.lives -= 1
+		self.game.update_screen()
+		self.level.reset()

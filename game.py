@@ -9,6 +9,7 @@ from button import Button
 
 titleText = centerText(constants.TITLE)
 pausedText = centerText("Paused")
+gameOverText = centerText("Game Over")
 
 startButton = Button(constants.SCREEN_WIDTH/2, 304, "Start")
 exitButton = Button(constants.SCREEN_WIDTH/2, 368, "Exit")
@@ -27,11 +28,14 @@ class Game:
 		#self.player = Player(0, 0, self.map)
 		
 		self.score = 0
+		self.coins = 0
+		self.lives = 3
 		
 	
 	def update_screen(self):
 		# Display images
 		if self.mode == "menu":
+			self.screen.fill(constants.BLACK)
 			self.screen.blit(titleText.text, titleText.rect)
 			self.screen.blit(startButton.image, startButton.rect)
 			self.screen.blit(exitButton.image, exitButton.rect)
@@ -44,6 +48,9 @@ class Game:
 				self.screen.blit(platform.image, (platform.rect.x - self.camera.rect.x, platform.rect.y - self.camera.rect.y))
 		elif self.mode == "paused":
 			self.screen.blit(pausedText.text, pausedText.rect)
+		elif self.mode == "gameover":
+			self.screen.fill(constants.BLACK)
+			self.screen.blit(gameOverText.text, gameOverText.rect)
 		pygame.display.update()
 		
 	def check_events(self):
@@ -71,6 +78,10 @@ class Game:
 						self.player.jump()
 					elif event.key == pygame.K_p:
 						self.mode = "paused"
+					'''
+					elif event.key == pygame.K_r:
+						self.mode = "gameover"
+					'''
 			pressed = pygame.key.get_pressed()
 			if pressed[pygame.K_LEFT]:
 				self.player.facing = "l"
@@ -88,10 +99,21 @@ class Game:
 				elif event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_p:
 						self.mode = "game"
+		elif self.mode == "gameover":
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					if easygui.ynbox("Quit?"):
+						self.terminate()
+					else:
+						pass
+				elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+					self.__init__("menu")
 	
 	def run_logic(self):
 		# Run the game
 		if self.mode == "game":
+			if self.lives <= 0:
+				self.mode = "gameover"
 			self.player.update()
 			if self.player.rect.right > self.camera.rect.right - (constants.SCREEN_WIDTH/4):
 				self.camera.move(self.player.change_x, 0)
