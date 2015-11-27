@@ -13,8 +13,12 @@ class centerText:
 	def __str__(self):
 		return self.text
 		
-class scoreText:
-	def __init__(self, x, y):
-		pass
-	def update(self):
-		pass
+class ScoreText:
+	def __init__(self):
+		self.text = fontObj.render("Score: " + " Lives: ", True, constants.WHITE)
+		self.rect = self.text.get_rect()
+		self.rect.x = 0
+		self.rect.y = 0
+		
+	def update(self, score, lives):
+		self.text = fontObj.render("Score: " + str(score) + " Lives: " + str(lives), True, constants.WHITE)

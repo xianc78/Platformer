@@ -69,7 +69,7 @@ class Player:
 			try:
 				self.game.set_map(self.game.level_list[self.game.levelno])
 			except IndexError:
-				self.game.terminate()
+				self.game.__init__("menu")
 		elif self.rect.left < 0:
 			self.rect.left = 0
 						
@@ -88,7 +88,7 @@ class Player:
 					self.level.enemy_list.remove(enemy)
 					self.game.score += 100
 				else:
-					self.rect.top = enemy.rect.bottom
+					self.die()
 		if self.rect.top > constants.SCREEN_HEIGHT:
 			self.die()
 			#self.rect.bottom = constants.SCREEN_HEIGHT

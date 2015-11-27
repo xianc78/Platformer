@@ -10,9 +10,11 @@ from button import Button
 titleText = centerText(constants.TITLE)
 pausedText = centerText("Paused")
 gameOverText = centerText("Game Over")
+scoreText = ScoreText()
 
 startButton = Button(constants.SCREEN_WIDTH/2, 304, "Start")
 exitButton = Button(constants.SCREEN_WIDTH/2, 368, "Exit")
+
 
 class Game:
 	def __init__(self, mode):
@@ -22,7 +24,7 @@ class Game:
 		
 		self.level_list = glob.glob("resources/levels/level?.map")
 		self.levelno = 0
-		#print len(level_list)
+		#print len(self.level_list)
 		self.set_map(self.level_list[self.levelno])
 		#self.set_map("resources/levels/level.map")
 		#self.player = Player(0, 0, self.map)
@@ -46,6 +48,7 @@ class Game:
 				self.screen.blit(enemy.image, (enemy.rect.x - self.camera.rect.x, enemy.rect.y - self.camera.rect.y))
 			for platform in self.platform_list:
 				self.screen.blit(platform.image, (platform.rect.x - self.camera.rect.x, platform.rect.y - self.camera.rect.y))
+			self.screen.blit(scoreText.text, scoreText.rect)
 		elif self.mode == "paused":
 			self.screen.blit(pausedText.text, pausedText.rect)
 		elif self.mode == "gameover":
@@ -120,6 +123,7 @@ class Game:
 			self.player.change_x = 0
 			for enemy in self.enemy_list:
 				enemy.update()
+			scoreText.update(self.score, self.lives)
 	
 	def set_map(self, map):
 		self.map = Map(map, self)

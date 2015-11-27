@@ -9,6 +9,7 @@ confg = ConfigParser.RawConfigParser()
 class Map():
 	platform_list = None
 	enemy_list = None
+	background = None
 	def __init__(self, file, game):
 		self.file = file
 		self.game = game

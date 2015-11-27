@@ -19,11 +19,13 @@ class Enemy():
 					self.rect.right = enemy.rect.left
 				else:
 					self.rect.left = enemy.rect.right
+		'''
 		if self.rect.colliderect(self.level.player.rect):
 			if self.change_x > 0:
 				self.rect.right = self.level.player.rect.left
 			else:
 				self.rect.left = self.level.player.rect.right
+		'''
 		self.rect.y += self.change_y
 		for platform in self.level.platform_list:
 			if self.rect.colliderect(platform.rect):
