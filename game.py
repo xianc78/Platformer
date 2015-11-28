@@ -43,6 +43,8 @@ class Game:
 			self.screen.blit(exitButton.image, exitButton.rect)
 		elif self.mode == "game":
 			self.screen.fill(constants.BLACK)
+			for coin in self.coin_list:
+				self.screen.blit(coin.image, (coin.rect.x - self.camera.rect.x, coin.rect.y - self.camera.rect.y))
 			self.screen.blit(self.player.image, (self.player.rect.x - self.camera.rect.x, self.player.rect.y - self.camera.rect.y))
 			for enemy in self.enemy_list:
 				self.screen.blit(enemy.image, (enemy.rect.x - self.camera.rect.x, enemy.rect.y - self.camera.rect.y))
@@ -117,6 +119,9 @@ class Game:
 		if self.mode == "game":
 			if self.lives <= 0:
 				self.mode = "gameover"
+			if self.coins >= 100:
+				self.coins = 0
+				self.lives += 1
 			self.player.update()
 			if self.player.rect.right > self.camera.rect.right - (constants.SCREEN_WIDTH/4):
 				self.camera.move(self.player.change_x, 0)
@@ -129,6 +134,7 @@ class Game:
 		self.map = Map(map, self)
 		self.platform_list = self.map.platform_list
 		self.enemy_list = self.map.enemy_list
+		self.coin_list = self.map.coin_list
 		self.camera.set_pos(0, 0)
 		try:
 			self.player = self.map.player

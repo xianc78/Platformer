@@ -3,6 +3,7 @@ import constants
 from platform import Platform
 from player import Player
 from enemy import *
+from items import *
 
 confg = ConfigParser.RawConfigParser()
 
@@ -15,6 +16,7 @@ class Map():
 		self.game = game
 		self.platform_list = []
 		self.enemy_list = []
+		self.coin_list = []
 		try:
 			confg.read(self.file)
 		except FileError:
@@ -61,6 +63,8 @@ class Map():
 					self.player = Player(x, y, "r", self)
 				elif tile == "e":
 					self.enemy_list.append(Enemy1(x, y, -4, self))
+				elif tile == "$":
+					self.coin_list.append(Coin(x, y))
 				else:
 					easygui.msgbox(tile + " is not a valid tile", constants.TITLE)
 					pygame.quit()

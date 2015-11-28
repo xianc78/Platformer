@@ -58,6 +58,11 @@ class Player:
 		for enemy in self.level.enemy_list:
 			if self.rect.colliderect(enemy.rect):
 				self.die()
+		for coin in self.level.coin_list:
+			if self.rect.colliderect(coin.rect):
+				self.level.coin_list.remove(coin)
+				self.game.coins += 1
+				self.game.score += 200
 			'''
 				if self.change_x > 0:
 					self.rect.right = enemy.rect.left
