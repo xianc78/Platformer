@@ -1,5 +1,7 @@
 import pygame
 import constants, spritesheet_functions
+from platform import *
+from items import *
 
 class Player:
 	frames_l = []
@@ -63,6 +65,11 @@ class Player:
 				self.level.coin_list.remove(coin)
 				self.game.coins += 1
 				self.game.score += 200
+		for item in self.level.item_list:
+			if self.rect.colliderect(item.rect):
+				self.level.item_list.remove(item)
+				if isinstance(item, ExtraLife):
+					self.game.lives += 1
 			'''
 				if self.change_x > 0:
 					self.rect.right = enemy.rect.left
@@ -86,6 +93,10 @@ class Player:
 						self.rect.bottom = platform.rect.top
 					else:
 						self.rect.top = platform.rect.bottom
+						if isinstance(platform, HiddenBlock):
+							self.game.coins += 1
+							self.game.score += 200
+							self.level.platform_list.remove(platform)
 					self.change_y = 0
 		for enemy in self.level.enemy_list:
 			if self.rect.colliderect(enemy.rect):

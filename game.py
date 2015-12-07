@@ -45,6 +45,8 @@ class Game:
 			self.screen.fill(constants.BLACK)
 			for coin in self.coin_list:
 				self.screen.blit(coin.image, (coin.rect.x - self.camera.rect.x, coin.rect.y - self.camera.rect.y))
+			for item in self.item_list:
+				self.screen.blit(item.image, (item.rect.x - self.camera.rect.x, item.rect.y - self.camera.rect.y))
 			self.screen.blit(self.player.image, (self.player.rect.x - self.camera.rect.x, self.player.rect.y - self.camera.rect.y))
 			for enemy in self.enemy_list:
 				self.screen.blit(enemy.image, (enemy.rect.x - self.camera.rect.x, enemy.rect.y - self.camera.rect.y))
@@ -135,6 +137,7 @@ class Game:
 		self.platform_list = self.map.platform_list
 		self.enemy_list = self.map.enemy_list
 		self.coin_list = self.map.coin_list
+		self.item_list = self.map.item_list
 		self.camera.set_pos(0, 0)
 		try:
 			self.player = self.map.player
