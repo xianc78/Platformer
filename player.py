@@ -82,8 +82,8 @@ class Player:
 				self.game.set_map(self.game.level_list[self.game.levelno])
 			except IndexError:
 				self.game.__init__("menu")
-		elif self.rect.left < 0:
-			self.rect.left = 0
+		elif self.rect.left < self.game.camera.rect.left:
+			self.rect.left = self.game.camera.rect.left
 						
 		# Move the character vertically and check for collisions
 		self.rect.y += self.change_y

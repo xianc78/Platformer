@@ -4,38 +4,40 @@ import constants
 class Enemy():
 	image = None
 	level = None
+	game = None
 	def update(self):
-		self.calc_grav()
-		self.rect.x += self.change_x
-		for platform in self.level.platform_list:
-			if self.rect.colliderect(platform.rect):
+		if self.rect.colliderect(self.game.camera.rect):
+			self.calc_grav()
+			self.rect.x += self.change_x
+			for platform in self.level.platform_list:
+				if self.rect.colliderect(platform.rect):
+						if self.change_x > 0:
+							self.rect.right = platform.rect.left
+						else:
+							self.rect.left = platform.rect.right
+			for enemy in self.level.enemy_list:
+				if self.rect.colliderect(enemy.rect) and enemy != self:
 					if self.change_x > 0:
-						self.rect.right = platform.rect.left
+						self.rect.right = enemy.rect.left
 					else:
-						self.rect.left = platform.rect.right
-		for enemy in self.level.enemy_list:
-			if self.rect.colliderect(enemy.rect) and enemy != self:
+						self.rect.left = enemy.rect.right
+			'''
+			if self.rect.colliderect(self.level.player.rect):
 				if self.change_x > 0:
-					self.rect.right = enemy.rect.left
+					self.rect.right = self.level.player.rect.left
 				else:
-					self.rect.left = enemy.rect.right
-		'''
-		if self.rect.colliderect(self.level.player.rect):
-			if self.change_x > 0:
-				self.rect.right = self.level.player.rect.left
-			else:
-				self.rect.left = self.level.player.rect.right
-		'''
-		self.rect.y += self.change_y
-		for platform in self.level.platform_list:
-			if self.rect.colliderect(platform.rect):
-					if self.change_y > 0:
-						self.rect.bottom = platform.rect.top
-					else:
-						self.rect.top = platform.rect.bottom
-					self.change_y = 0
-		if self.rect.top > constants.SCREEN_HEIGHT:
-			self.level.enemy_list.remove(self)
+					self.rect.left = self.level.player.rect.right
+			'''
+			self.rect.y += self.change_y
+			for platform in self.level.platform_list:
+				if self.rect.colliderect(platform.rect):
+						if self.change_y > 0:
+							self.rect.bottom = platform.rect.top
+						else:
+							self.rect.top = platform.rect.bottom
+						self.change_y = 0
+			if self.rect.top > constants.SCREEN_HEIGHT:
+				self.level.enemy_list.remove(self)
 		
 	def calc_grav(self):
 		if self.change_y == 0:
@@ -51,6 +53,7 @@ class Enemy1(Enemy):
 		self.rect.x = x
 		self.rect.y = y
 		self.level = level
+		self.game = self.level.game
 		self.change_x = change_x
 		self.change_y = 0
 		
