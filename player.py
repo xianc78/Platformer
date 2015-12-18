@@ -93,10 +93,17 @@ class Player:
 						self.rect.bottom = platform.rect.top
 					else:
 						self.rect.top = platform.rect.bottom
-						if isinstance(platform, HiddenBlock):
+						if isinstance(platform, HiddenBlock) and platform.active == True:
 							self.game.coins += 1
 							self.game.score += 200
-							self.level.platform_list.remove(platform)
+							platform.rect.y -= 2
+							for enemy in self.level.enemy_list:
+								if platform.rect.colliderect(enemy.rect):
+									self.level.enemy_list.remove(enemy)
+							platform.rect.y += 2
+							platform.active = False
+							platform.image.fill(constants.WHITE)
+							#self.level.platform_list.remove(platform)
 					self.change_y = 0
 		for enemy in self.level.enemy_list:
 			if self.rect.colliderect(enemy.rect):

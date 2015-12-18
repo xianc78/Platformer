@@ -38,6 +38,8 @@ class Enemy():
 						self.change_y = 0
 			if self.rect.top > constants.SCREEN_HEIGHT:
 				self.level.enemy_list.remove(self)
+		elif self.rect.right <= self.game.camera.rect.left:
+			self.level.enemy_list.remove(self)
 		
 	def calc_grav(self):
 		if self.change_y == 0:
