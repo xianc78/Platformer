@@ -1,5 +1,6 @@
 import pygame
 import constants
+from spritesheet_functions import SpriteSheet
 
 class Enemy():
 	image = None
@@ -8,6 +9,8 @@ class Enemy():
 	def update(self):
 		if self.rect.colliderect(self.game.camera.rect):
 			self.calc_grav()
+			if self.change_x != 0:
+				self.animate()
 			self.rect.x += self.change_x
 			for platform in self.level.platform_list:
 				if self.rect.colliderect(platform.rect):
@@ -48,9 +51,29 @@ class Enemy():
 			self.change_y += constants.GRAVITY
 		
 class Enemy1(Enemy):
+	frames = None
 	def __init__(self, x, y, change_x, level):
+		self.spritesheet = SpriteSheet("resources/graphics/enemy.bmp", (36, 50, 63))
+		self.frames = []
+		
+		image = self.spritesheet.grab_image(0, 0, 16, 16)
+		image = pygame.transform.scale2x(image)
+		self.frames.append(image)
+		image = self.spritesheet.grab_image(16, 0, 16, 16)
+		image = pygame.transform.scale2x(image)
+		self.frames.append(image)
+		image = self.spritesheet.grab_image(32, 0, 16, 16)
+		image = pygame.transform.scale2x(image)
+		self.frames.append(image)
+		
+		self.index = 0
+		self.MAX_FRAMES = 9
+		self.image = self.frames[0]
+		
+		'''
 		self.image = pygame.Surface([constants.TILE_WIDTH, constants.TILE_HEIGHT])
 		self.image.fill(constants.RED)
+		'''
 		self.rect = self.image.get_rect()
 		self.rect.x = x
 		self.rect.y = y
@@ -58,4 +81,10 @@ class Enemy1(Enemy):
 		self.game = self.level.game
 		self.change_x = change_x
 		self.change_y = 0
+		
+	def animate(self):
+		self.index += 1
+		if self.index >= self.MAX_FRAMES:
+			self.index = 0
+		self.image = self.frames[self.index//3]
 		

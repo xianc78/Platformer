@@ -1,9 +1,14 @@
-import pygame
+import pygame, sys, easygui
 import constants
 
 class SpriteSheet:
 	def __init__(self, image, colorkey):
-		self.sprite_sheet = pygame.image.load(image)
+		try:
+			self.sprite_sheet = pygame.image.load(image)
+		except ValueError:
+			msgbox(image + " doesn't exist.")
+			pygame.quit()
+			sys.exit()
 		self.colorkey = colorkey
 		
 	def grab_image(self, x, y, w, h):

@@ -7,10 +7,17 @@ from textfunctions import *
 from camera import Camera
 from button import Button
 
+if pygame.joystick.get_count() > 0:
+	controller = pygame.joystick.Joystick(0)
+	controller.init()
+else:
+	controller = None
+
 titleText = centerText(constants.TITLE)
 pausedText = centerText("Paused")
 gameOverText = centerText("Game Over")
 scoreText = ScoreText()
+
 
 startButton = Button(constants.SCREEN_WIDTH/2, 304, "Start")
 exitButton = Button(constants.SCREEN_WIDTH/2, 368, "Exit")
@@ -85,10 +92,22 @@ class Game:
 						self.player.jump()
 					elif event.key == pygame.K_p:
 						self.mode = "paused"
-					'''
-					elif event.key == pygame.K_r:
-						self.mode = "gameover"
-					'''
+				elif (event.type == pygame.JOYBUTTONDOWN) and (controller != None):
+					print "Button down"
+					if event.button == 6:
+						self.player.jump()
+					elif event.button == 9:
+						self.mode = "paused"
+				elif event.type == pygame.JOYHATMOTION:
+					print "Controll pad moved"
+			if controller != None:
+				if controller.get_hat(0)[0] < 0:
+						self.player.facing = "l"
+						self.player.change_x = -4
+				elif controller.get_hat(0)[0] > 0:
+						self.player.facing = "r"
+						self.player.change_x = 4
+					
 			pressed = pygame.key.get_pressed()
 			if pressed[pygame.K_LEFT]:
 				self.player.facing = "l"
@@ -106,6 +125,9 @@ class Game:
 				elif event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_p:
 						self.mode = "game"
+				elif event.type == pygame.KEYDOWN:
+					if event.button == 6:
+						self.mode = "game"
 		elif self.mode == "gameover":
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -113,7 +135,7 @@ class Game:
 						self.terminate()
 					else:
 						pass
-				elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+				elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.JOYBUTTONDOWN:
 					self.__init__("menu")
 	
 	def run_logic(self):
@@ -130,7 +152,7 @@ class Game:
 			self.player.change_x = 0
 			for enemy in self.enemy_list:
 				enemy.update()
-			scoreText.update(self.score, self.lives)
+			scoreText.update(self.score, self.lives, self.coins)
 	
 	def set_map(self, map):
 		self.map = Map(map, self)

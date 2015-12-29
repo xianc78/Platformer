@@ -6,6 +6,7 @@ from items import *
 class Player:
 	frames_l = []
 	frames_r = []
+	image = None
 	def __init__(self, x, y, facing, level):
 		# Create the image
 		self.spritesheet = spritesheet_functions.SpriteSheet("resources/graphics/player.bmp", constants.WHITE)
@@ -59,6 +60,7 @@ class Player:
 						self.rect.left = platform.rect.right
 		for enemy in self.level.enemy_list:
 			if self.rect.colliderect(enemy.rect):
+				self.level.enemy_list.remove(enemy)
 				self.die()
 		for coin in self.level.coin_list:
 			if self.rect.colliderect(coin.rect):
@@ -107,8 +109,8 @@ class Player:
 					self.change_y = 0
 		for enemy in self.level.enemy_list:
 			if self.rect.colliderect(enemy.rect):
+				self.level.enemy_list.remove(enemy)
 				if self.change_y > 0:
-					self.level.enemy_list.remove(enemy)
 					self.game.score += 100
 				else:
 					self.die()

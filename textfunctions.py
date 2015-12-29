@@ -20,5 +20,5 @@ class ScoreText:
 		self.rect.x = 0
 		self.rect.y = 0
 		
-	def update(self, score, lives):
-		self.text = fontObj.render("Score: " + str(score) + "   Lives: " + str(lives), True, constants.WHITE)
+	def update(self, score, lives, coins):
+		self.text = fontObj.render("Score: " + str(score) + "   Lives: " + str(lives) + "  Coin(s): " +  str(coins), True, constants.WHITE)
