@@ -1,8 +1,15 @@
-import pygame
+import pygame, easygui, sys
 import constants
 pygame.init()
 
-fontObj = pygame.font.SysFont("arial", 32)
+try:
+	fontObj = pygame.font.Font("resources/font.ttf", 32)
+except pygame.error:
+	easygui.msgbox("font.ttf doesn't exist.")
+	pygame.quit()
+	sys.exit()
+
+#fontObj = pygame.font.SysFont("arial", 32)
 
 class centerText:
 	def __init__(self, text):

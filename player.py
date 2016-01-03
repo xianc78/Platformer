@@ -1,7 +1,12 @@
 import pygame
+pygame.init()
 import constants, spritesheet_functions
 from platform import *
 from items import *
+
+levelCompleteSound = pygame.mixer.Sound("resources/sounds/round_end.wav")
+deathSound = pygame.mixer.Sound("resources/sounds/death.wav")
+jumpSound = pygame.mixer.Sound("resources/sounds/jump.wav")
 
 class Player:
 	frames_l = []
@@ -78,12 +83,17 @@ class Player:
 				else:
 					self.rect.left = enemy.rect.right
 			'''
+			
+		# Go to next level when the player passes the level limit
 		if self.rect.right > self.level.limit:
+			levelCompleteSound.play()
+			pygame.time.wait(500)
 			self.game.levelno += 1
 			try:
 				self.game.set_map(self.game.level_list[self.game.levelno])
 			except IndexError:
 				self.game.__init__("menu")
+				
 		elif self.rect.left < self.game.camera.rect.left:
 			self.rect.left = self.game.camera.rect.left
 						
@@ -127,6 +137,10 @@ class Player:
 		self.rect.y -= 2
 		if (len(platform_hit_list) > 0) or (self.rect.bottom == constants.SCREEN_HEIGHT):
 			self.change_y = -10
+			jumpSound.play()
+			
+	def shoot(self):
+		pass
 		
 	def animate(self):
 		self.index += 1
@@ -144,6 +158,8 @@ class Player:
 			self.change_y += constants.GRAVITY
 			
 	def die(self):
+		deathSound.play()
 		self.game.lives -= 1
 		self.game.update_screen()
+		pygame.time.wait(500)
 		self.level.reset()
