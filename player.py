@@ -3,6 +3,7 @@ pygame.init()
 import constants, spritesheet_functions
 from platform import *
 from items import *
+from fireball import FireBall
 
 levelCompleteSound = pygame.mixer.Sound("resources/sounds/round_end.wav")
 deathSound = pygame.mixer.Sound("resources/sounds/death.wav")
@@ -77,6 +78,8 @@ class Player:
 				self.level.item_list.remove(item)
 				if isinstance(item, ExtraLife):
 					self.game.lives += 1
+				elif isinstance(item, FireFlower):
+					self.game.status = "fire"
 			'''
 				if self.change_x > 0:
 					self.rect.right = enemy.rect.left
@@ -140,7 +143,11 @@ class Player:
 			jumpSound.play()
 			
 	def shoot(self):
-		pass
+		if self.game.status == "fire":
+			if self.facing == "r":
+				self.level.fire_list.append(FireBall(self.rect.right, self.rect.centery, 8, self.level))
+			else:
+				self.level.fire_list.append(FireBall(self.rect.left - 10, self.rect.centery, -8, self.level))
 		
 	def animate(self):
 		self.index += 1

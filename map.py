@@ -4,6 +4,7 @@ from platform import *
 from player import Player
 from enemy import *
 from items import *
+from fireball import FireBall
 
 confg = ConfigParser.RawConfigParser()
 
@@ -12,7 +13,9 @@ class Map():
 	enemy_list = None
 	coin_list = None
 	item_list = None
+	fire_list = None
 	background = None
+	music = None
 	def __init__(self, file, game):
 		self.file = file
 		self.game = game
@@ -20,6 +23,7 @@ class Map():
 		self.enemy_list = []
 		self.coin_list = []
 		self.item_list = []
+		self.fire_list = []
 		try:
 			confg.read(self.file)
 		except FileError:
@@ -70,6 +74,8 @@ class Map():
 					self.coin_list.append(Coin(x, y))
 				elif tile == "+":
 					self.item_list.append(ExtraLife(x, y))
+				elif tile == "f":
+					self.item_list.append(FireFlower(x, y))
 				elif tile == "?":
 					self.platform_list.append(HiddenBlock(x, y, self))
 				else:

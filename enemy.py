@@ -24,6 +24,13 @@ class Enemy():
 						self.rect.right = enemy.rect.left
 					else:
 						self.rect.left = enemy.rect.right
+			for fireball in self.level.fire_list:
+				if self.rect.colliderect(fireball.rect):
+					try:
+						self.level.enemy_list.remove(self)
+						self.game.score += 100
+					except ValueError:
+						pass
 			'''
 			if self.rect.colliderect(self.level.player.rect):
 				if self.change_x > 0:

@@ -39,6 +39,7 @@ class Game:
 		self.score = 0
 		self.coins = 0
 		self.lives = 3
+		self.status = "normal"
 		
 	
 	def update_screen(self):
@@ -57,6 +58,8 @@ class Game:
 			self.screen.blit(self.player.image, (self.player.rect.x - self.camera.rect.x, self.player.rect.y - self.camera.rect.y))
 			for enemy in self.enemy_list:
 				self.screen.blit(enemy.image, (enemy.rect.x - self.camera.rect.x, enemy.rect.y - self.camera.rect.y))
+			for fireball in self.fire_list:
+				self.screen.blit(fireball.image, (fireball.rect.x - self.camera.rect.x, fireball.rect.y - self.camera.rect.y))
 			for platform in self.platform_list:
 				self.screen.blit(platform.image, (platform.rect.x - self.camera.rect.x, platform.rect.y - self.camera.rect.y))
 			self.screen.blit(scoreText.text, scoreText.rect)
@@ -76,7 +79,7 @@ class Game:
 						self.terminate()
 					else:
 						pass
-				elif event.type == pygame.KEYDOWN:
+				elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
 					self.mode = "game"
 				elif event.type == pygame.MOUSEBUTTONDOWN:
 					self.mouse_click()
@@ -92,6 +95,8 @@ class Game:
 						self.player.jump()
 					elif event.key == pygame.K_p:
 						self.mode = "paused"
+					elif event.key == pygame.K_z:
+						self.player.shoot()
 				elif (event.type == pygame.JOYBUTTONDOWN) and (controller != None):
 					print "Button down"
 					if event.button == 6:
@@ -152,6 +157,8 @@ class Game:
 			self.player.change_x = 0
 			for enemy in self.enemy_list:
 				enemy.update()
+			for fireball in self.fire_list:
+				fireball.update()
 			scoreText.update(self.score, self.lives, self.coins)
 	
 	def set_map(self, map):
@@ -160,6 +167,7 @@ class Game:
 		self.enemy_list = self.map.enemy_list
 		self.coin_list = self.map.coin_list
 		self.item_list = self.map.item_list
+		self.fire_list = self.map.fire_list
 		self.camera.set_pos(0, 0)
 		try:
 			self.player = self.map.player
