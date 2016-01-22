@@ -13,12 +13,13 @@ if pygame.joystick.get_count() > 0:
 else:
 	controller = None
 
+# In game text
 titleText = centerText(constants.TITLE)
 pausedText = centerText("Paused")
 gameOverText = centerText("Game Over")
 scoreText = ScoreText()
 
-
+# Menu buttons
 startButton = Button(constants.SCREEN_WIDTH/2, 304, "Start")
 exitButton = Button(constants.SCREEN_WIDTH/2, 368, "Exit")
 
@@ -51,6 +52,7 @@ class Game:
 			self.screen.blit(exitButton.image, exitButton.rect)
 		elif self.mode == "game":
 			self.screen.fill(constants.BLACK)
+			self.screen.blit(self.map.background, (-self.camera.rect.x, -self.camera.rect.y))
 			for coin in self.coin_list:
 				self.screen.blit(coin.image, (coin.rect.x - self.camera.rect.x, coin.rect.y - self.camera.rect.y))
 			for item in self.item_list:

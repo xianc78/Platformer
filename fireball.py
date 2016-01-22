@@ -16,7 +16,6 @@ class FireBall:
 		self.level = level
 		
 	def update(self):
-		# Fireball goes straight and does not bounce like in mario.
 		self.calc_grav()
 		self.rect.x += self.change_x
 		self.rect.y += self.change_y

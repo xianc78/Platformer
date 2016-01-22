@@ -1,5 +1,7 @@
+; Level released under public domain
 [meta]
 limit= 25
+background= background1.png
 
 [map]
 layout= @.........e..............

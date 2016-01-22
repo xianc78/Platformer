@@ -6,7 +6,6 @@ from enemy import *
 from items import *
 from fireball import FireBall
 
-confg = ConfigParser.RawConfigParser()
 
 class Map():
 	platform_list = None
@@ -17,6 +16,7 @@ class Map():
 	background = None
 	music = None
 	def __init__(self, file, game):
+		self.confg = ConfigParser.RawConfigParser()
 		self.file = file
 		self.game = game
 		self.platform_list = []
@@ -25,7 +25,7 @@ class Map():
 		self.item_list = []
 		self.fire_list = []
 		try:
-			confg.read(self.file)
+			self.confg.read(self.file)
 		except FileError:
 			easygui.msgbox(self.file + " does not exist.", constants.TITLE)
 			pygame.quit()
@@ -35,27 +35,38 @@ class Map():
 	def create_level(self):
 		# Load all the data from the file if it exists.
 		try:
-			self.limit = int(confg.get("meta", "limit")) * constants.TILE_WIDTH
+			self.limit = int(self.confg.get("meta", "limit")) * constants.TILE_WIDTH
 		except ConfigParser.NoSectionError:
-			easygui.msgbox("meta section does not exist in " + self.file + ".")
+			easygui.msgbox("meta section does not exist in " + self.file + ".", constants.TITLE)
 			pygame.quit()
 			sys.exit()
 		except ConfigParser.NoOptionError:
-			easygui.msgbox("limit option does not exist in " + self.file + ".")
+			easygui.msgbox("limit option does not exist in " + self.file + ".", constants.TITLE)
 			pygame.quit()
 			sys.exit()
 		except ValueError:
-			easygui.msgbox("limit must be a whole number.")
+			easygui.msgbox("limit must be a whole number.", constants.TITLE)
 			pygame.quit()
 			sys.exit()
 		try:
-			self.layout = confg.get("map", "layout").split("\n")
+			background = self.confg.get("meta", "background")
+			self.background = pygame.image.load("resources/graphics/" + background)
+		except ConfigParser.NoOptionError:
+			easygui.msgbox("background option does not exist in " + self.file + ".", constants.TITLE)
+			pygame.quit()
+			sys.exit()
+		except pygame.error:
+			easygui.msgbox(background + " does not exist.", constants.TITLE)
+			pygame.quit()
+			sys.exit()
+		try:
+			self.layout = self.confg.get("map", "layout").split("\n")
 		except ConfigParser.NoSectionError:
-			easygui.msgbox("map section does not exist.", constants.TITLE)
+			easygui.msgbox("'map' section does not exist.", constants.TITLE)
 			pygame.quit()
 			sys.exit()
 		except ConfigParser.NoOptionError:
-			easygui.msgbox("layout option does not exist.", constants.TITLE)
+			easygui.msgbox("'layout' option does not exist.", constants.TITLE)
 			pygame.quit()
 			sys.exit()
 			
